@@ -8,14 +8,11 @@ import Foundation
 // MARK: Implement Queue using an Array as the base storage
 // ------------------------------------------------------------
 
-public struct Queue<Type: Comparable> {
+public struct Queue<T: Comparable & CustomStringConvertible> {
 
-    public var storage = [Type]()
+    public var storage = [T]()
     
     public init() { }
-    
-    public var minimum: Type?
-
 }
 
 // ------------------------------------------------------------
@@ -32,29 +29,38 @@ extension Queue {
         return storage.isEmpty
     }
     
-    public func front() -> Type? {
-        return nil
+    public func front() -> T? {
+        return storage.first
     }
     
-    public func last() -> Type? {
-        return nil
+    public func last() -> T? {
+        return storage.last
     }
     
-    public func enqueue(_ newValue: Type) {
-        
+    public mutating func enqueue(_ newValue: T) {
+        print("ENQUEUE ITEM: \(newValue.description)")
+        storage.append(newValue)
     }
     
-    public func dequeue() {
-        
+    public mutating func dequeue() -> T? {
+        guard let firstItem = storage.first else {
+            print("Queue is empty")
+            return nil
+        }
+        print("DEQUEUE ITEM: \(firstItem.description)")
+        return storage.removeFirst()
     }
 }
 
 // ------------------------------------------------------------
 // MARK: Queue representation
 // ------------------------------------------------------------
-extension Queue: CustomStringConvertible {
+extension Queue {
     
     public var description: String {
-        return ""
+        let top = "### QUEUE ###\n\n"
+        let bottom = "\n\n##############\n"
+        let element = self.storage.map {$0.description}.joined(separator: " ")
+        return top + element + bottom
     }
 }
